@@ -1,0 +1,25 @@
+name: Download latest files
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron:  '23 0,6,12,18 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v2
+    - name: Download latest files
+      run: |-
+        ./downlod.sh
+    - name: Commit and push if changed
+      run: |-
+        git diff
+        git config --global user.email "actions@users.noreply.github.com"
+        git config --global user.name "Bot"
+        git add -A
+        git commit -m "Updated content" || exit 0
+        git push
